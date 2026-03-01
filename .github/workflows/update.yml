@@ -1,30 +1,24 @@
 name: Update YouTube Shorts Feed
-
-# Only run on weekdays at midnight UTC
+# Only run on Tuesdays and Thursdays at midnight UTC
 on:
   schedule:
-    - cron: '0 0 * * 1-5'  # Monday to Friday
+    - cron: '0 0 * * 2,4'  # Tuesday and Thursday
   workflow_dispatch:
-
 jobs:
   update-feed:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-
       - name: Install dependencies
         run: npm install node-fetch@2
-
       - name: Generate feed
         run: node generator.js
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-
       - name: Commit feed.json
         run: |
           git config user.name "github-actions"
